@@ -1,5 +1,5 @@
-qs [![Build Status](https://secure.travis-ci.org/nshah/qs.clj.png)](http://travis-ci.org/nshah/qs.clj)
+duri [![Build Status](https://secure.travis-ci.org/nshah/duri.clj.png)](http://travis-ci.org/nshah/duri.clj)
 ========
 
-Find a free port:
-http://code.daaku.org/qs.clj/
+Parse and build URIs, URLs and query strings:
+http://code.daaku.org/duri.clj/
