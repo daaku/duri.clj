@@ -10,21 +10,24 @@
   "Encoding a map to a query string, using either a specified encoding
   or UTF-8 by default."
   [params & [encoding]]
-  (->> (for [[k v] params]
-         (str (component/encode (as-str k) encoding)
-              "="
-              (component/encode (str v) encoding)))
-       (interpose "&")
-       (apply str)))
+  (if (string? params)
+    params
+    (->> (for [[k v] params]
+           (str (component/encode (as-str k) encoding)
+                "="
+                (component/encode (str v) encoding)))
+         (interpose "&")
+         (apply str))))
 
 (defn decode
   "Encoding a map to a query string, using either a specified encoding
   or UTF-8 by default."
   [qs & [encoding]]
-  (if (blank? qs)
-    {}
-    (->> (split qs #"&")
-         (map #(split % #"="))
-         (map (fn [[k v]] [(keyword (component/decode k))
-                           (component/decode v)]))
-         (into {}))))
+  (cond
+   (map? qs) qs
+   (blank? qs) {}
+   :else (->> (split qs #"&")
+              (map #(split % #"="))
+              (map (fn [[k v]] [(keyword (component/decode k))
+                                (component/decode v)]))
+              (into {}))))
