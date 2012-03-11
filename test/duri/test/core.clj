@@ -29,6 +29,14 @@
   (is (= "https://foo.com/"
          (build {:host "foo.com"
                  :scheme "https"})))
+  (is (= "https://foo.com:81/"
+         (build {:host "foo.com"
+                 :scheme "https"
+                 :port 81})))
+  (is (= "https://foo.com/"
+         (build {:host "foo.com"
+                 :scheme "https"
+                 :port nil})))
   (is (= "https://foo.com/foo?bar=1#pound"
          (build {:path "/foo"
                  :host "foo.com"
