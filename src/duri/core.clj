@@ -57,12 +57,11 @@
 (defn build
   "Builds a URL string from it's parts."
   [parts]
-  (.toString
-   (URI.
-    (if-not-empty (parts :scheme))
-    (if-not-empty (parts :user-info))
-    (if-not-empty (parts :host))
-    (if-not-empty (parts :port) -1)
-    (path-or-default (parts :path))
-    (if-not-empty (qs/encode (parts :query)))
-    (if-not-empty (parts :fragment)))))
+  (str (URI.
+        (if-not-empty (parts :scheme))
+        (if-not-empty (parts :user-info))
+        (if-not-empty (parts :host))
+        (if-not-empty (parts :port) -1)
+        (path-or-default (parts :path))
+        (if-not-empty (qs/encode (parts :query)))
+        (if-not-empty (parts :fragment)))))
