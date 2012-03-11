@@ -19,12 +19,25 @@
     "/"
     path))
 
-(defn- normalize-qs
-  "Encodes a map to a query string if necessary, or returns strings as-is."
-  [query]
-  (if (map? query)
-    (qs/encode query)
-    query))
+(defmacro if-not-empty
+  "Use a value if it isn't empty, else use the other value."
+  [val & [else]]
+  `(let [val# ~val
+         else# ~else]
+     (cond
+       (nil? val#) else#
+
+       (string? val#)
+       (if (blank? val#)
+         else#
+         val#)
+
+       (seq? val#)
+       (if (empty? val#)
+         else#
+         val#)
+
+       :else val#)))
 
 (defn parse
   "Parse a URL string into it's parts."
@@ -46,10 +59,10 @@
   [parts]
   (.toString
    (URI.
-    (get parts :scheme)
-    (get parts :user-info)
-    (get parts :host)
-    (or (get parts :port) -1)
-    (path-or-default (get parts :path))
-    (normalize-qs (get parts :query))
-    (get parts :fragment))))
+    (if-not-empty (parts :scheme))
+    (if-not-empty (parts :user-info))
+    (if-not-empty (parts :host))
+    (if-not-empty (parts :port) -1)
+    (path-or-default (parts :path))
+    (if-not-empty (qs/encode (parts :query)))
+    (if-not-empty (parts :fragment)))))

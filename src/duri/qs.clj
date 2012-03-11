@@ -10,14 +10,15 @@
   "Encoding a map to a query string, using either a specified encoding
   or UTF-8 by default."
   [params & [encoding]]
-  (if (string? params)
-    params
-    (->> (for [[k v] params]
-           (str (component/encode (as-str k) encoding)
-                "="
-                (component/encode (str v) encoding)))
-         (interpose "&")
-         (apply str))))
+  (cond
+    (empty? params) ""
+    (string? params) params
+    :else (->> (for [[k v] params]
+                 (str (component/encode (as-str k) encoding)
+                      "="
+                      (component/encode (str v) encoding)))
+               (interpose "&")
+               (apply str))))
 
 (defn decode
   "Encoding a map to a query string, using either a specified encoding
