@@ -42,26 +42,37 @@
 (defn parse
   "Parse a URL string into it's parts."
   [input]
-  (let [uri (URI. input)]
-    (remove-defaults-and-nil
-     {:scheme (-?> uri .getScheme .toLowerCase)
-      :user-info (.getUserInfo uri)
-      :host (-?> uri .getHost .toLowerCase)
-      :port (.getPort uri)
-      :path (path-or-default (.getPath uri))
-      :query (qs/decode (.getQuery uri))
-      :fragment (.getFragment uri)}
-     {:port -1
-      :query {}})))
+  (if (map? input)
+    input
+    (let [uri (URI. input)]
+      (remove-defaults-and-nil
+       {:scheme (-?> uri .getScheme .toLowerCase)
+        :user-info (.getUserInfo uri)
+        :host (-?> uri .getHost .toLowerCase)
+        :port (.getPort uri)
+        :path (path-or-default (.getPath uri))
+        :query (qs/decode (.getQuery uri))
+        :fragment (.getFragment uri)}
+       {:port -1
+        :query {}}))))
 
 (defn build
   "Builds a URL string from it's parts."
   [parts]
-  (str (URI.
-        (if-not-empty (parts :scheme))
-        (if-not-empty (parts :user-info))
-        (if-not-empty (parts :host))
-        (if-not-empty (parts :port) -1)
-        (path-or-default (parts :path))
-        (if-not-empty (qs/encode (parts :query)))
-        (if-not-empty (parts :fragment)))))
+  (if (string? parts)
+    parts
+    (str (URI.
+          (if-not-empty (parts :scheme))
+          (if-not-empty (parts :user-info))
+          (if-not-empty (parts :host))
+          (if-not-empty (parts :port) -1)
+          (path-or-default (parts :path))
+          (if-not-empty (qs/encode (parts :query)))
+          (if-not-empty (parts :fragment))))))
+
+(defn append-query
+  "Append some query data to the given thing. The given thing may be a
+  string URL or a map of it's parts."
+  [uri query]
+  (let [uri (parse uri)]
+    (assoc uri :query (qs/merge (uri :query) query))))
