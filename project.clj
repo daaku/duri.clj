@@ -1,4 +1,4 @@
-(defproject duri "1.0.3"
+(defproject duri "1.0.4"
   :description "URI, URL, query strings and so on."
   :author "Naitik Shah <n@daaku.org>"
   :url "https://github.com/nshah/duri.clj"

@@ -64,7 +64,7 @@
   for your sanity."
   [params]
   (letfn [(rename-key [k] (str-replace (as-str k) "-" "_"))
-          (process-value [v] (if (associative? v) (underscore-keys v) v))]
+          (process-value [v] (if (map? v) (underscore-keys v) v))]
     (into {} (map (fn [[k v]] [(rename-key k) (process-value v)]) params))))
 
 (defn dasherize-keys
@@ -72,5 +72,5 @@
   for your sanity."
   [params]
   (letfn [(rename-key [k] (str-replace (as-str k) "_" "-"))
-          (process-value [v] (if (associative? v) (dasherize-keys v) v))]
+          (process-value [v] (if (map? v) (dasherize-keys v) v))]
     (into {} (map (fn [[k v]] [(rename-key k) (process-value v)]) params))))

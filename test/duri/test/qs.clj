@@ -32,7 +32,8 @@
          (php-flatten {:a ["x" "y" "z"]}))))
 
 (deftest underscore-keys-test
-  (is (= {"a_b" 1} (underscore-keys {:a-b 1}))))
+  (is (= {"a_b" 1} (underscore-keys {:a-b 1})))
+  (is (= {"a_b" [1 2]} (underscore-keys {:a-b [1 2]}))))
 
 (deftest dasherize-keys-test
   (is (= {"a-b" 1} (dasherize-keys {:a_b 1}))))
