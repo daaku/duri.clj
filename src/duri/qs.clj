@@ -46,13 +46,18 @@
 (defn php-flatten
   "Flattens a map and formats the keys using the same style as PHP
   expects, allowing sending dictionaries and arrays via query encoding."
-  [params]
-  (letfn [(mk [k p] (if (blank? p)
-                      (as-str k)
-                      (str (as-str p) "[" (as-str k) "]")))
-          (re [k v p] (if (associative? v) (tr v (mk k p)) {(mk k p) v}))
-          (tr [params p] (apply merge (map (fn [[k v]] (re k v p)) params)))]
-    (tr params nil)))
+  [params & [parent]]
+  (apply merge
+         (map (fn [[k v]]
+                (let [key (if (nil? parent)
+                            (as-str k)
+                            (str (as-str parent) "[" (as-str k) "]"))]
+                  (cond
+                    (map? v) (php-flatten v key)
+                    (sequential? v)
+                    (php-flatten (map-indexed #(vector (str %) %2) v) key)
+                    :else {key v})))
+              params)))
 
 (defn underscore-keys
   "Replaces all dashes in key names with underscore without any regard

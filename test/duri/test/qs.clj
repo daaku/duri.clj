@@ -26,7 +26,9 @@
   (is (= {:a "1" :b "2"} (qs/merge "a=1" "b=2"))))
 
 (deftest php-flatten-test
-  (is (= {"a[b]" 1} (php-flatten {:a {:b 1}}))))
+  (is (= {"a[b]" 1} (php-flatten {:a {:b 1}})))
+  (is (= {"a[0]" "x" "a[1]" "y" "a[2]" "z"}
+         (php-flatten {:a ["x" "y" "z"]}))))
 
 (deftest underscore-keys-test
   (is (= {"a_b" 1} (underscore-keys {:a-b 1}))))
