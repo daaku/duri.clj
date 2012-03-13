@@ -2,7 +2,8 @@
   "Test duri.qs functionality."
   {:author "Naitik Shah"}
   (:require [duri.qs :as qs])
-  (:use [duri.qs :only [encode decode php-flatten underscore-keys]]
+  (:use [duri.qs :only [encode decode php-flatten underscore-keys
+                        dasherize-keys]]
         [clojure.test :only [deftest testing is]]))
 
 (deftest encode-test
@@ -32,3 +33,6 @@
 
 (deftest underscore-keys-test
   (is (= {"a_b" 1} (underscore-keys {:a-b 1}))))
+
+(deftest dasherize-keys-test
+  (is (= {"a-b" 1} (dasherize-keys {:a_b 1}))))
