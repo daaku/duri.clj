@@ -10,7 +10,7 @@
 (defn- remove-defaults-and-nil
   "Removes the given default values and nil values from the data."
   [data defaults]
-  (first (diff data defaults)))
+  (into {} (filter (comp some? val) (first (diff data defaults)))))
 
 (defn- path-or-default
   "Returns the path, or a default path of \"/\" if the given one is blank."
